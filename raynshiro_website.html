@@ -1,0 +1,302 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RaynShiro Official Website</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background-size: cover;
+      background-position: center;
+      transition: background-image 1s ease-in-out;
+      overflow-x: hidden;
+    }
+    .overlay {
+      background: rgba(0,0,0,0.6);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: white;
+    }
+    header img {
+      width: 100px;
+      border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+    header h1 {
+      font-size: 2rem;
+      animation: blink 2s infinite;
+      letter-spacing: 2px;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .button-frame, .toggle-frame {
+      margin: 1rem auto;
+      padding: 1rem;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 4px solid;
+      max-width: 600px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      animation: borderColorChange 6s infinite linear;
+    }
+    .toggle-frame {
+      grid-template-columns: 1fr;
+      max-width: 300px;
+    }
+    @keyframes borderColorChange {
+      0%   { border-color: violet; }
+      25%  { border-color: gold; }
+      50%  { border-color: deepskyblue; }
+      75%  { border-color: orange; }
+      100% { border-color: violet; }
+    }
+    button {
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      background-color: #222222aa;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s ease;
+    }
+    button:hover {
+      background-color: #444;
+      transform: scale(1.03);
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      max-height: 80vh;
+      overflow-y: auto;
+      z-index: 999;
+      width: 90%;
+      max-width: 600px;
+    }
+    .popup-close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="snow-canvas"></canvas>
+  <div class="overlay"></div>
+  <header>
+    <img src="https://files.catbox.moe/jtok66.jpg" alt="RaynShiro Logo">
+    <h1>Selamat datang di web RaynShiro</h1>
+  </header>  <div class="button-frame">
+    <button onclick="showPopup('developer')">Developer</button>
+    <button onclick="showPopup('miyako')">Tsukiyuki Miyako</button>
+    <button onclick="showPopup('sewa')">Sewa Bot</button>
+    <button onclick="showPopup('premium')">Member Premium</button>
+    <button onclick="window.open('https://www.instagram.com/ellen_reality02', '_blank')">Instagram</button>
+    <button onclick="window.open('https://www.tiktok.com/@raynshiro', '_blank')">TikTok</button>
+    <button onclick="window.open('https://www.youtube.com/@DILL_AZ', '_blank')">YouTube</button>
+    <button onclick="window.open('https://chat.whatsapp.com/EcJ9LNCCTgDLgYCsOHuppa', '_blank')">Group Bot</button>
+    <button onclick="window.open('https://whatsapp.com/channel/0029Vb5oxL8B4hdOBTCX4F25', '_blank')">Saluran WA</button>
+    <button onclick="showPopup('kontak')">Kontak</button>
+  </div>  <div class="toggle-frame">
+    <button onclick="toggleMusic()">Ganti Musik</button>
+    <button onclick="toggleBackground()">Ganti Background</button>
+  </div>  <div class="popup" id="popup">
+    <span class="popup-close" onclick="closePopup()">&times;</span>
+    <div id="popup-content"></div>
+  </div>
+  <audio id="music" src="https://files.catbox.moe/gg3fj8.mp3" autoplay loop></audio>  <script>
+    const dynamicBackgrounds = [
+      'https://files.catbox.moe/txcqf3.jpg',
+      'https://files.catbox.moe/1uwjb6.jpg',
+      'https://files.catbox.moe/b5jp0p.jpg'
+    ];
+    const staticBackgrounds = [
+      'https://files.catbox.moe/su0tmj.jpg',
+      'https://files.catbox.moe/i4l5va.jpg'
+    ];
+    let useDynamic = true;
+    let bgIndex = 0;
+
+    function rotateBackgrounds() {
+      if (useDynamic) {
+        document.body.style.backgroundImage = `url('${dynamicBackgrounds[bgIndex]}')`;
+        bgIndex = (bgIndex + 1) % dynamicBackgrounds.length;
+      }
+    }
+    setInterval(() => { if (useDynamic) rotateBackgrounds(); }, 3000);
+    rotateBackgrounds();
+
+    function toggleBackground() {
+      useDynamic = false;
+      bgIndex = (bgIndex + 1) % staticBackgrounds.length;
+      document.body.style.backgroundImage = `url('${staticBackgrounds[bgIndex]}')`;
+    }
+
+    let currentSong = 0;
+    const songs = [
+      'https://files.catbox.moe/gg3fj8.mp3',
+      'https://files.catbox.moe/aipwz3.mp3'
+    ];
+    function toggleMusic() {
+      currentSong = (currentSong + 1) % songs.length;
+      const music = document.getElementById('music');
+      music.src = songs[currentSong];
+      music.play();
+    }
+
+    function showPopup(type) {
+      const popup = document.getElementById('popup');
+      const content = document.getElementById('popup-content');
+      let html = '';
+      if (type === 'developer') {
+        html = `<h2>Developer</h2><p style="white-space:pre-wrap">👤 Perkenalan Diri (Developer - RaynShiro)
+
+Perkenalkan, saya RaynShiro.
+Anda mungkin mengenal saya dengan beberapa nama panggilan, seperti Dill, Rayn, atau Ellen. Saat ini saya masih berstatus pelajar.
+Meskipun demikian, saya memiliki minat dan ambisi yang kuat di dua bidang yang berbeda, yaitu pemrograman dan pelayaran.
+
+🎯 Cita-Cita:
+
+Cita-cita saya yang utama adalah menjadi seorang programmer profesional.
+Dunia pemrograman menarik minat saya karena tantangannya yang terus berkembang dan kesempatan untuk menciptakan solusi inovatif.
+Saya tertarik untuk menguasai berbagai bahasa pemrograman dan teknologi terkini agar dapat berkontribusi dalam pengembangan perangkat lunak yang bermanfaat.
+
+Selain itu, saya juga memiliki ketertarikan yang mendalam terhadap dunia pelayaran.
+Petualangan di laut, tantangan navigasi, dan keindahan alam bawah laut selalu memikat saya.
+Saya melihat profesi pelaut sebagai peluang untuk menjelajahi dunia dan merasakan pengalaman yang unik dan berharga.
+
+Meskipun terlihat berbeda, kedua cita-cita ini saling melengkapi.
+Ketelitian dan kemampuan memecahkan masalah yang dibutuhkan dalam pemrograman dapat saya terapkan dalam navigasi dan pengoperasian kapal.
+Sementara itu, pengalaman menjelajahi lautan dapat memberikan saya perspektif baru dan inspirasi dalam pengembangan perangkat lunak.
+
+Saya yakin bahwa dengan kerja keras dan dedikasi, saya dapat mencapai kedua impian saya.</p>`;
+      } else if (type === 'miyako') {
+        html = `<h2>Tsukiyuki Miyako</h2><p style="white-space:pre-wrap">Berikut adalah deskripsi tentang Bot WhatsApp Tsukiyuki Miyako:
+
+Tsukiyuki Miyako adalah bot WhatsApp yang multifungsi. Fitur-fitur:
+- 🎮 Game RPG, Family100
+- 🤖 AI untuk tanya jawab
+- 🎵 Download musik, video TikTok, IG, YT tanpa watermark
+- 📱 Download APK
+
+🧾 Cara pakai:
+1. Semua perintah pakai titik (.) contoh: .menu
+2. Game ketik .family100
+3. Download IG, FB, YouTube dll di menu Download
+4. Cari barang di .bukalapak Hoodie Keren
+5. Balas VN ketik .tomp3
+6. Isi limit: .beli limit 1
+7. Bantuan: .owner
+
+Ketik .sewa untuk info sewa bot.</p>`;
+      } else if (type === 'sewa') {
+        html = `<h2>Sewa Bot</h2>
+          <img src="https://files.catbox.moe/nf3fx0.jpg" style="width:100%;margin:5px 0;">
+          <img src="https://files.catbox.moe/nvzgew.jpg" style="width:100%;margin:5px 0;">
+          <img src="https://files.catbox.moe/s7a8xw.jpg" style="width:100%;margin:5px 0;">
+        `;
+      } else if (type === 'premium') {
+        html = `<h2>Member Premium 30 Day</h2><p style="white-space:pre-wrap">1. *Akses Prioritas*: Mendapatkan prioritas dalam menggunakan bot, sehingga Anda tidak perlu menunggu lama untuk mendapatkan respons.
+2. *Fitur Eksklusif*: Mendapatkan akses ke fitur-fitur eksklusif yang tidak tersedia untuk pengguna biasa, seperti kemampuan untuk mengatur pengaturan bot yang lebih lanjut.
+3. *Batas Penggunaan yang Lebih Tinggi*: Mendapatkan batas penggunaan yang lebih tinggi, sehingga Anda dapat menggunakan bot lebih sering tanpa khawatir tentang batasan.
+4. *Dukungan Prioritas*: Mendapatkan dukungan prioritas dari tim pengembang bot, sehingga Anda dapat mendapatkan bantuan lebih cepat jika mengalami masalah.
+5. *Pengalaman yang Lebih Baik*: Mendapatkan pengalaman yang lebih baik dalam menggunakan bot, dengan fitur-fitur yang lebih lengkap dan respons yang lebih cepat.
+
+Dengan membeli premium, Anda dapat meningkatkan pengalaman Anda dalam menggunakan bot dan mendapatkan akses ke fitur-fitur yang lebih lengkap.
+
+Dan dapat request fitur.</p>`;
+      } else if (type === 'kontak') {
+        html = `<h2>Kontak</h2><p>Hubungi saya via WhatsApp: <a href="https://wa.me/6281245594083">6281245594083</a></p>`;
+      }
+      content.innerHTML = html;
+      popup.style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+    }
+
+    const canvas = document.getElementById('snow-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    let snowflakes = [];
+
+    function createSnowflakes() {
+      for (let i = 0; i < 100; i++) {
+        snowflakes.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 4 + 1,
+          speed: Math.random() * 1 + 0.5
+        });
+      }
+    }
+
+    function drawSnowflakes() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      for (let flake of snowflakes) {
+        ctx.moveTo(flake.x, flake.y);
+        ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+      }
+      ctx.fill();
+      moveSnowflakes();
+    }
+
+    function moveSnowflakes() {
+      for (let flake of snowflakes) {
+        flake.y += flake.speed;
+        if (flake.y > height) {
+          flake.y = 0;
+          flake.x = Math.random() * width;
+        }
+      }
+    }
+
+    function animateSnow() {
+      drawSnowflakes();
+      requestAnimationFrame(animateSnow);
+    }
+
+    createSnowflakes();
+    animateSnow();
+  </script></body>
+</html>
